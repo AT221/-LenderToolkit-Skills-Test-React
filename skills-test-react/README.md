@@ -32,5 +32,5 @@ React Router  -->
 
 Bonus points will be awarded for:
   * improvements to user experience, styling, and for correcting any obvious errors in wording on the site.
-  * adding redux state management.
+  <!-- * adding redux state management. -->
   * hosting app on a platform like heroku

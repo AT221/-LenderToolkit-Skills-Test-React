@@ -5,24 +5,39 @@ import { Button, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/ma
 import List from '@mui/material/List';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import {useDispatch, useSelector} from 'react-redux';
+import {saveData, deleteData} from '../../Redux/Actions/TodoActions';
+
+//Table Imports
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 const BasicForm = () => {
 
 
-const [todos, setTodos] = useState([]);
 const [value, setValue] = useState('');
+
+const dispatch = useDispatch();
+const toDoArr = useSelector((state)=>state.todoData.todos);
+
+
 
 const saveToDo = (toDoTxt) =>{
   //Remove white spaces
   const trimTxt = toDoTxt.trim();
   //Save if not empty
   if (trimTxt.length > 0){
-    setTodos([...todos,trimTxt]);
+    dispatch(saveData(trimTxt));
   }
 } 
 
 const deleteTodo = (toDoIndex) =>{
-  const newTodos = todos.filter((_,index)=>index !== toDoIndex);
-  setTodos(newTodos);
+  dispatch(deleteData(toDoIndex));
 }
 
   return(
@@ -54,29 +69,45 @@ const deleteTodo = (toDoIndex) =>{
         </Form>
       </Formik>
 
-<List>
-  {todos.map((todo ,index) => (
-    <ListItem key={index.toString()}>
-        <ListItemText primary={todo}/>
-        <ListItemSecondaryAction>
-            <DeleteIcon 
-              onClick={() =>{
-                deleteTodo(index);
+      <Paper sx={{margin:'2%'}}>
+                <TableContainer component={Paper}>
+                <Table>
+            
+                  <TableHead>
+                      <TableRow>
+                        <TableCell>ToDo List</TableCell>
+                      </TableRow>
+                  </TableHead>
+                <TableBody>
+                {toDoArr.map((todo ,index) => (
+                  <TableRow key={index.toString()}>
+                  <TableCell>{todo}</TableCell>
+                    <TableCell>
+                      <DeleteIcon 
+                      onClick={() =>{
+                        deleteTodo(index);
+                      }}
+                  />
+                    </TableCell>
+                  </TableRow>
 
-              }}
-
-            />
-          </ListItemSecondaryAction>
-      </ListItem>
-    ))}
-</List>
-
+                  
+                ))}
+                </TableBody>
 
       
+                </Table>
+
+                </TableContainer>
+
+
+      </Paper>
+
     </div>
   );
 };
 export default BasicForm
+
 
 /*
 
@@ -104,7 +135,6 @@ Redux
 
 4) Separation of concerns? MDP OR MSP ? Container element with all dispatch + state logic
 passing as props to the actual page similar to MVC 
-
 
 
 
